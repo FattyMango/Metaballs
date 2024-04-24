@@ -1,0 +1,135 @@
+package main
+
+import (
+	"time"
+
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
+)
+
+type BallSpeed struct {
+	minVelocity float32
+	maxVelocity float32
+}
+
+var (
+	SlowSpeedBall   = BallSpeed{0.001, 0.005}
+	NormalSpeedBall = BallSpeed{0.005, 0.01}
+	FastSpeedBall   = BallSpeed{0.01, 0.02}
+)
+
+type FPS time.Duration
+
+var (
+	FPS30  = FPS(time.Second / 30)
+	FPS60  = FPS(time.Second / 60)
+	FPS120 = FPS(time.Second / 120)
+)
+
+type BallSize struct {
+	minRadius float32
+	maxRadius float32
+}
+
+var (
+	SmallSizeBall  = BallSize{0.025, 0.05}
+	MediumSizeBall = BallSize{0.05, 0.1}
+	LargeSizeBall  = BallSize{0.1, 0.2}
+)
+
+type ScreenSize struct {
+	width  int
+	height int
+}
+
+var (
+	ScreenSmall  = ScreenSize{480, 480}
+	ScreenMedium = ScreenSize{600, 600}
+	ScreenLarge  = ScreenSize{768, 768}
+)
+
+type Resolution int
+
+var (
+	Resolution128  = Resolution(64)
+	Resolution256  = Resolution(256)
+	Resolution512  = Resolution(512)
+	Resolution1024 = Resolution(1024)
+	Resolution2048 = Resolution(2048)
+)
+
+type MetaBallApp struct {
+	fyneApp fyne.App
+	screen  *Screen
+
+	ballSpeed BallSpeed
+	ballSize  BallSize
+
+	fps FPS
+
+	screenSize ScreenSize
+	resolution Resolution
+}
+
+func NewDefaultMetaBallApp() *MetaBallApp {
+
+	return &MetaBallApp{
+		ballSpeed: NormalSpeedBall,
+		ballSize:  MediumSizeBall,
+
+		fps: FPS30,
+
+		screenSize: ScreenSmall,
+		resolution: Resolution256,
+	}
+}
+
+func NewMetaBallApp(ballSpeed BallSpeed, ballSize BallSize, fps FPS, screenSize ScreenSize, resolution Resolution) *MetaBallApp {
+
+	return &MetaBallApp{
+		ballSpeed: ballSpeed,
+		ballSize:  ballSize,
+
+		fps: fps,
+
+		screenSize: screenSize,
+		resolution: resolution,
+	}
+
+}
+
+func (m *MetaBallApp) Run() {
+	m.fyneApp = app.New()
+	g := newRandomGroup(4, m.ballSpeed, m.ballSize)
+	m.screen = NewScreen(g, m.resolution)
+
+	w := m.fyneApp.NewWindow("Metaballs")
+
+	m.screen.raster = canvas.NewRaster(m.screen.draw)
+	m.screen.ExtendBaseWidget(m.screen)
+	w.SetContent(m.screen)
+	w.Resize(fyne.NewSize(float32(m.screenSize.width), float32(m.screenSize.height)))
+
+	m.Animate()
+	w.ShowAndRun()
+}
+
+func (m *MetaBallApp) Animate() {
+	// render the screen
+	go func() {
+
+		frames := time.NewTicker(time.Duration(m.fps))
+		for range frames.C {
+			m.screen.Refresh()
+		}
+	}()
+	// move the balls
+	go func() {
+
+		frames := time.NewTicker(time.Millisecond * 40)
+		for range frames.C {
+			m.screen.group.move()
+		}
+	}()
+}

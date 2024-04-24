@@ -3,123 +3,71 @@ package main
 import (
 	"image"
 	"math"
-	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/theme"
 
 	// "fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/StephaneBunel/bresenham"
 )
 
+// ISO Contour Value
 const iso = 1
 
 type Screen struct {
 	widget.BaseWidget
 	raster *canvas.Raster
 	group  *Group
+
+	resolution Resolution
 }
 
-func NewScreen() *Screen {
+func NewScreen(g *Group, r Resolution) *Screen {
 	s := &Screen{
-		group: newRandomEnsemble(10),
+		group: g,
+		resolution: r,
 	}
 	s.raster = canvas.NewRaster(s.draw)
 	return s
-}
-
-func (mw *Screen) Animate() {
-	go func() {
-		for range time.Tick(time.Millisecond * 40) {
-			mw.group.move()
-			mw.Refresh()
-		}
-	}()
 }
 
 func (bw *Screen) CreateRenderer() fyne.WidgetRenderer {
 	return widget.NewSimpleRenderer(bw.raster)
 }
 
+// Called when s.Refresh() is called
+// Re-render the screen
 func (s *Screen) draw(w, h int) image.Image {
-	fgcolor := theme.WarningColor()
-	img := image.NewRGBA(image.Rect(0, 0, w, h))
+
+	// fgcolor := theme.WarningColor()
+	img := image.NewRGBA(image.Rect(0, 0, int(s.Size().Height), int(s.Size().Width)))
 
 	size := float32(max(w, h))
-	g := int(math.Ceil(float64(size) / (128*2)))
-	 
+	g := int(math.Ceil(float64(size) / float64(s.resolution)))
+	color := s.group.balls[randRangeInt(0, len(s.group.balls))].color
+
 	for row := 0; row < h; row += g {
 		y := float32(row) / size
 		y2 := float32(row+g) / size
+
 		for col := 0; col < w; col += g {
+
 			x := float32(col) / size
 			x2 := float32(col+g) / size
-
 			a := s.group.value(x, y)
 			b := s.group.value(x2, y)
 			c := s.group.value(x2, y2)
 			d := s.group.value(x, y2)
 
-			a1, a2 := lerp(col, col+g, (iso-a)/(b-a)), row
-			b1, b2 := col+g, lerp(row, row+g, (iso-b)/(c-b))
-			c1, c2 := lerp(col, col+g, (iso-d)/(c-d)), row+g
-			d1, d2 := col, lerp(row, row+g, (iso-a)/(d-a))
+			sq := Square{a, b, c, d}
+			lines := MarchSquare(sq, col, row, g)
+			for _, line := range lines {
 
-			switch state(a, b, c, d) {
-			case 1, 14:
-				bresenham.DrawLine(img, c1, c2, d1, d2, fgcolor)
-			case 2, 13:
-				bresenham.DrawLine(img, b1, b2, c1, c2, fgcolor)
-			case 3, 12:
-				bresenham.DrawLine(img, b1, b2, d1, d2, fgcolor)
-			case 4:
-				bresenham.DrawLine(img, a1, a2, b1, b2, fgcolor)
-			case 5:
-				bresenham.DrawLine(img, a1, a2, d1, d2, fgcolor)
-				bresenham.DrawLine(img, b1, b2, c1, c2, fgcolor)
-			case 6:
-				bresenham.DrawLine(img, a1, a2, c1, c2, fgcolor)
-			case 7, 8:
-				bresenham.DrawLine(img, a1, a2, d1, d2, fgcolor)
-			case 9:
-				bresenham.DrawLine(img, a1, a2, c1, c2, fgcolor)
-			case 10:
-				bresenham.DrawLine(img, a1, a2, b1, b2, fgcolor)
-				bresenham.DrawLine(img, c1, c2, d1, d2, fgcolor)
-			case 11:
-				bresenham.DrawLine(img, a1, a2, b1, b2, fgcolor)
+				bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
 			}
 		}
+
 	}
 	return img
-}
-
-func state(tl, tr, br, bl float32) int {
-	res := 0
-	if tl >= iso {
-		res |= 8
-	}
-	if tr >= iso {
-		res |= 4
-	}
-	if br >= iso {
-		res |= 2
-	}
-	if bl >= iso {
-		res |= 1
-	}
-	return res
-}
-
-// Linear interpolation
-func lerp(a, b int, t float32) int {
-	if t < 0 {
-		return a
-	}
-	if t > 1 {
-		return b
-	}
-	return int(math.Round(float64(a) + float64(b-a)*float64(t)))
 }
