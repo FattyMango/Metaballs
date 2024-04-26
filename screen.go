@@ -2,6 +2,7 @@ package main
 
 import (
 	"image"
+	"image/color"
 	"math"
 
 	"fyne.io/fyne/v2"
@@ -45,7 +46,7 @@ func (s *Screen) draw(w, h int) image.Image {
 
 	size := float32(max(w, h))
 	g := int(math.Ceil(float64(size) / float64(s.resolution)))
-	color := s.group.balls[randRangeInt(0, len(s.group.balls))].color
+	color := color.Opaque
 
 	for row := 0; row < h; row += g {
 		y := float32(row) / size

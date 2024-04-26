@@ -5,7 +5,7 @@ func main() {
 	NewMetaBallApp(
 		NormalSpeedBall,
 		MediumSizeBall,
-		FPS120,
+		FPS60,
 		ScreenLarge,
 		Resolution256).
 	Run()

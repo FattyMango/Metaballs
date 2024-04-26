@@ -49,11 +49,11 @@ func NewRandomBall(s BallSpeed,z BallSize) Ball {
 
 func (b *Ball) move() {
 	b.pos.x += b.vel.x
-	if b.pos.x <= 0.1 || b.pos.x >= 0.85 {
+	if b.pos.x <= 0.1 || b.pos.x >= 0.9 {
 		b.vel.x = -b.vel.x
 	}
 	b.pos.y += b.vel.y
-	if b.pos.y <= 0.1 || b.pos.y >= 0.85 {
+	if b.pos.y <= 0.1 || b.pos.y >= 0.9 {
 		b.vel.y = -b.vel.y
 	}
 }
