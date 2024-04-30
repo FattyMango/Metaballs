@@ -1,13 +1,17 @@
 package main
 
-func main() {
+//import "github.com/pkg/profile"
 
+
+func main() {
+	// defer profile.Start(profile.CPUProfile,profile.ProfilePath("./profile")).Stop()
 	NewMetaBallApp(
-		NormalSpeedBall,
-		MediumSizeBall,
+		4,
+		SlowSpeedBall,
+		SmallSizeBall,
 		FPS60,
 		ScreenLarge,
-		Resolution256).
-	Run()
+		Resolution1024).
+		Run()
 
 }

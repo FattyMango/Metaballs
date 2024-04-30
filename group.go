@@ -16,9 +16,10 @@ type Group struct {
 //
 // This is the function of drawing a metaball
 func (e *Group) value(x, y float32) float32 {
-	rl := e.mutex.RLocker()
-	rl.Lock()
-	defer rl.Unlock()
+//	rl := e.mutex.RLocker()
+//	rl.Lock()
+//	defer rl.Unlock()
+	
 	var res float32
 	for _, b := range e.balls {
 		dx := x - b.pos.x

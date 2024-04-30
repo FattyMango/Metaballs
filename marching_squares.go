@@ -2,7 +2,6 @@ package main
 
 import "math"
 
-
 type Square struct {
 	a float32
 	b float32
@@ -29,15 +28,14 @@ func MarchSquare(sq Square, col, row, g int) []Line {
 
 	switch mask(sq.a, sq.b, sq.c, sq.d) {
 	case 1, 14:
+		lines = append(lines, Line{c1, c2, d1, d2})
 
-
-		 lines = append(lines, Line{c1, c2, d1, d2})
 	case 2, 13:
+		lines = append(lines, Line{b1, b2, c1, c2})
 
-		 lines = append(lines, Line{b1, b2, c1, c2})
 	case 3, 12:
+		lines = append(lines, Line{b1, b2, d1, d2})
 
-		 lines = append(lines, Line{b1, b2, d1, d2})
 	case 4:
 		lines = append(lines, Line{a1, a2, b1, b2})
 
@@ -47,16 +45,31 @@ func MarchSquare(sq Square, col, row, g int) []Line {
 
 	case 6:
 		lines = append(lines, Line{a1, a2, c1, c2})
+
 	case 7, 8:
 		lines = append(lines, Line{a1, a2, d1, d2})
+
 	case 9:
 		lines = append(lines, Line{a1, a2, c1, c2})
+
 	case 10:
 		lines = append(lines, Line{a1, a2, b1, b2})
 		lines = append(lines, Line{c1, c2, d1, d2})
-	case 11: 
+
+	case 11:
 		lines = append(lines, Line{a1, a2, b1, b2})
+	
+	// if the square is inside the contour line, fill the square with the color
+	case 15:
+
+		lines = append(lines, Line{a1, a2, b1, b2})
+		lines = append(lines, Line{b1, b2, c1, c2})
+		lines = append(lines, Line{c1, c2, d1, d2})
+		lines = append(lines, Line{d1, d2, a1, a2})
+		
 	}
+
+
 	return lines
 }
 

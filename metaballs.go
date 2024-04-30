@@ -33,9 +33,9 @@ type BallSize struct {
 }
 
 var (
-	SmallSizeBall  = BallSize{0.025, 0.05}
-	MediumSizeBall = BallSize{0.05, 0.1}
-	LargeSizeBall  = BallSize{0.1, 0.2}
+	SmallSizeBall  = BallSize{0.025, 0.075}
+	MediumSizeBall = BallSize{0.075, 0.1}
+	LargeSizeBall  = BallSize{0.1, 0.15}
 )
 
 type ScreenSize struct {
@@ -63,6 +63,7 @@ type MetaBallApp struct {
 	fyneApp fyne.App
 	screen  *Screen
 
+	ballCount uint8
 	ballSpeed BallSpeed
 	ballSize  BallSize
 
@@ -75,6 +76,7 @@ type MetaBallApp struct {
 func NewDefaultMetaBallApp() *MetaBallApp {
 
 	return &MetaBallApp{
+		ballCount: 8,
 		ballSpeed: NormalSpeedBall,
 		ballSize:  MediumSizeBall,
 
@@ -85,9 +87,11 @@ func NewDefaultMetaBallApp() *MetaBallApp {
 	}
 }
 
-func NewMetaBallApp(ballSpeed BallSpeed, ballSize BallSize, fps FPS, screenSize ScreenSize, resolution Resolution) *MetaBallApp {
+func NewMetaBallApp(ballCount uint8,ballSpeed BallSpeed, ballSize BallSize, fps FPS, screenSize ScreenSize, resolution Resolution) *MetaBallApp {
 
 	return &MetaBallApp{
+		ballCount: ballCount,
+
 		ballSpeed: ballSpeed,
 		ballSize:  ballSize,
 
@@ -101,7 +105,7 @@ func NewMetaBallApp(ballSpeed BallSpeed, ballSize BallSize, fps FPS, screenSize 
 
 func (m *MetaBallApp) Run() {
 	m.fyneApp = app.New()
-	g := newRandomGroup(4, m.ballSpeed, m.ballSize)
+	g := newRandomGroup(int(m.ballCount), m.ballSpeed, m.ballSize)
 	m.screen = NewScreen(g, m.resolution)
 
 	w := m.fyneApp.NewWindow("Metaballs")
@@ -129,7 +133,7 @@ func (m *MetaBallApp) Animate() {
 
 		frames := time.NewTicker(time.Millisecond * 40)
 		for range frames.C {
-			m.screen.group.move()
+			go m.screen.group.move()
 		}
 	}()
 }

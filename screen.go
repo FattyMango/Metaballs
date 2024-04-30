@@ -46,16 +46,18 @@ func (s *Screen) draw(w, h int) image.Image {
 
 	size := float32(max(w, h))
 	g := int(math.Ceil(float64(size) / float64(s.resolution)))
-	color := color.Opaque
+	//red
+	color := color.RGBA{255, 0, 0, 255}
 
 	for row := 0; row < h; row += g {
 		y := float32(row) / size
 		y2 := float32(row+g) / size
-
+		
 		for col := 0; col < w; col += g {
 
 			x := float32(col) / size
 			x2 := float32(col+g) / size
+			
 			a := s.group.value(x, y)
 			b := s.group.value(x2, y)
 			c := s.group.value(x2, y2)
