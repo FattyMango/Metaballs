@@ -26,7 +26,7 @@ type Screen struct {
 
 func NewScreen(g *Group, r Resolution) *Screen {
 	s := &Screen{
-		group: g,
+		group:      g,
 		resolution: r,
 	}
 	s.raster = canvas.NewRaster(s.draw)
@@ -47,17 +47,17 @@ func (s *Screen) draw(w, h int) image.Image {
 	size := float32(max(w, h))
 	g := int(math.Ceil(float64(size) / float64(s.resolution)))
 	//red
-	color := color.RGBA{255, 0, 0, 255}
+	color := color.RGBA{175, 65, 84, 1}
 
 	for row := 0; row < h; row += g {
 		y := float32(row) / size
 		y2 := float32(row+g) / size
-		
+
 		for col := 0; col < w; col += g {
 
 			x := float32(col) / size
 			x2 := float32(col+g) / size
-			
+
 			a := s.group.value(x, y)
 			b := s.group.value(x2, y)
 			c := s.group.value(x2, y2)
@@ -66,9 +66,10 @@ func (s *Screen) draw(w, h int) image.Image {
 			sq := Square{a, b, c, d}
 			lines := MarchSquare(sq, col, row, g)
 			for _, line := range lines {
-				
+
 				bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
 			}
+
 		}
 
 	}

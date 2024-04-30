@@ -7,10 +7,10 @@ func main() {
 	// defer profile.Start(profile.CPUProfile,profile.ProfilePath("./profile")).Stop()
 	NewMetaBallApp(
 		4,
-		SlowSpeedBall,
+		NormalSpeedBall,
 		SmallSizeBall,
-		FPS60,
-		ScreenLarge,
+		FPS(45),
+		ScreenSmall,
 		Resolution1024).
 		Run()
 

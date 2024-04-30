@@ -1,6 +1,6 @@
 .PHONY: run
 run:
-	@ $(MAKE) build && ./metalballs
+	@ $(MAKE) build && ./metaballs 
 
 .PHONY: build
 build:

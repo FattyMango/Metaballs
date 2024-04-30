@@ -123,7 +123,7 @@ func (m *MetaBallApp) Animate() {
 	// render the screen
 	go func() {
 
-		frames := time.NewTicker(time.Duration(m.fps))
+		frames := time.NewTicker(time.Second / time.Duration(m.fps))
 		for range frames.C {
 			m.screen.Refresh()
 		}

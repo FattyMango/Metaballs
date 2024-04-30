@@ -7,7 +7,7 @@ import (
 
 type Group struct {
 	balls []Ball
-	mutex sync.RWMutex
+	mutex *sync.RWMutex
 }
 
 //	 n
@@ -16,10 +16,10 @@ type Group struct {
 //
 // This is the function of drawing a metaball
 func (e *Group) value(x, y float32) float32 {
-//	rl := e.mutex.RLocker()
-//	rl.Lock()
-//	defer rl.Unlock()
-	
+	// rl := e.mutex.RLocker()
+	// rl.Lock()
+	// defer rl.Unlock()
+
 	var res float32
 	for _, b := range e.balls {
 		dx := x - b.pos.x
@@ -39,14 +39,17 @@ func (e *Group) color(x, y float32) color.Color {
 func newRandomGroup(n int, s BallSpeed, z BallSize) *Group {
 	balls := make([]Ball, n)
 	for i := 0; i < n; i++ {
-		balls[i] = NewRandomBall(s,z)
+		balls[i] = NewRandomBall(s, z)
 	}
-	return &Group{balls: balls}
+	return &Group{
+		balls: balls,
+		mutex: &sync.RWMutex{},
+	}
 }
 
 func (e *Group) move() {
-	e.mutex.Lock()
-	defer e.mutex.Unlock()
+	// e.mutex.Lock()
+	// defer e.mutex.Unlock()
 	for i := range e.balls {
 		e.balls[i].move()
 	}
