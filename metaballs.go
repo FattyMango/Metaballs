@@ -44,7 +44,7 @@ type ScreenSize struct {
 }
 
 var (
-	ScreenSmall  = ScreenSize{480, 480}
+	ScreenSmall  = ScreenSize{350, 350}
 	ScreenMedium = ScreenSize{600, 600}
 	ScreenLarge  = ScreenSize{768, 768}
 )
@@ -55,7 +55,7 @@ var (
 	Resolution128  = Resolution(64)
 	Resolution256  = Resolution(256)
 	Resolution512  = Resolution(512)
-	Resolution1024 = Resolution(1024)
+	Resolution1024 = Resolution(900)
 	Resolution2048 = Resolution(2048)
 )
 

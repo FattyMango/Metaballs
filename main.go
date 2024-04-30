@@ -11,7 +11,7 @@ func main() {
 		LargeSizeBall,
 		FPS(45),
 		ScreenSmall,
-		Resolution512).
+		Resolution1024).
 		Run()
 
 }
