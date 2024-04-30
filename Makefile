@@ -9,4 +9,5 @@ build:
 
 .PHONY: build-win
 build-win:
-	@CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build 
+	@go install github.com/fyne-io/fyne-cross@latest
+	@fyne-cross windows -arch=amd64,386

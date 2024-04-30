@@ -1,0 +1,8 @@
+Website = "https://github.com/FattyMango/metaballs"
+
+[Details]
+  Icon = "Icon.png"
+  Name = "Metaballs"
+  ID = "com.github.FattyMango.metaballs"
+  Version = "1.2.2"
+  Build = 3

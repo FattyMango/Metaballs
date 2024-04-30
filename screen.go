@@ -66,7 +66,7 @@ func (s *Screen) draw(w, h int) image.Image {
 			sq := Square{a, b, c, d}
 			lines := MarchSquare(sq, col, row, g)
 			for _, line := range lines {
-
+				
 				bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
 			}
 		}
