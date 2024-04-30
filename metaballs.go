@@ -14,8 +14,8 @@ type BallSpeed struct {
 }
 
 var (
-	SlowSpeedBall   = BallSpeed{0.001, 0.005}
-	NormalSpeedBall = BallSpeed{0.005, 0.01}
+	SlowSpeedBall   = BallSpeed{0.003, 0.007}
+	NormalSpeedBall = BallSpeed{0.007, 0.01}
 	FastSpeedBall   = BallSpeed{0.01, 0.02}
 )
 

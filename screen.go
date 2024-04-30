@@ -47,7 +47,7 @@ func (s *Screen) draw(w, h int) image.Image {
 	size := float32(max(w, h))
 	g := int(math.Ceil(float64(size) / float64(s.resolution)))
 	//red
-	color := color.RGBA{175, 65, 84, 1}
+	color := color.RGBA{196, 77, 86,1}
 
 	for row := 0; row < h; row += g {
 		y := float32(row) / size
