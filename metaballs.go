@@ -125,7 +125,7 @@ func (m *MetaBallApp) Animate() {
 
 		frames := time.NewTicker(time.Second / time.Duration(m.fps))
 		for range frames.C {
-			m.screen.Refresh()
+			go m.screen.Refresh()
 		}
 	}()
 	// move the balls

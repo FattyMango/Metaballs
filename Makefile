@@ -11,3 +11,13 @@ build:
 build-win:
 	@go install github.com/fyne-io/fyne-cross@latest
 	@fyne-cross windows -arch=amd64,386
+
+.PHONY: build-linux
+build-linux:
+	@go install github.com/fyne-io/fyne-cross@latest
+	@fyne-cross linux -
+	
+
+.PHONY: pprof-cpu
+pprof-cpu:
+	@go tool pprof -http localhost:8080 profile/cpu.pprof

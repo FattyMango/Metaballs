@@ -7,10 +7,10 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
+	"github.com/StephaneBunel/bresenham"
 
 	// "fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/StephaneBunel/bresenham"
 )
 
 // ISO Contour Value
@@ -22,14 +22,21 @@ type Screen struct {
 	group  *Group
 
 	resolution Resolution
+
+	painter chan *Line
+	img    *image.RGBA
+	color color.RGBA
 }
 
 func NewScreen(g *Group, r Resolution) *Screen {
 	s := &Screen{
 		group:      g,
 		resolution: r,
+		painter:  make(chan *Line),
+		color: color.RGBA{196, 77, 86, 1},
 	}
 	s.raster = canvas.NewRaster(s.draw)
+	// go s.StartPainter()
 	return s
 }
 
@@ -37,17 +44,26 @@ func (bw *Screen) CreateRenderer() fyne.WidgetRenderer {
 	return widget.NewSimpleRenderer(bw.raster)
 }
 
+func (s *Screen) StartPainter(){
+	
+	for {
+		select {
+		case line := <-s.painter:
+		go bresenham.DrawLine(s.img, line.x1, line.y1, line.x2, line.y2, s.color)
+	}
+}
+}
+
 // Called when s.Refresh() is called
 // Re-render the screen
 func (s *Screen) draw(w, h int) image.Image {
-
+	// start := time.Now()
 	// fgcolor := theme.WarningColor()
 	img := image.NewRGBA(image.Rect(0, 0, int(s.Size().Height), int(s.Size().Width)))
 
 	size := float32(max(w, h))
 	g := int(math.Ceil(float64(size) / float64(s.resolution)))
-	//red
-	color := color.RGBA{196, 77, 86,1}
+
 
 	for row := 0; row < h; row += g {
 		y := float32(row) / size
@@ -58,20 +74,27 @@ func (s *Screen) draw(w, h int) image.Image {
 			x := float32(col) / size
 			x2 := float32(col+g) / size
 
-			a := s.group.value(x, y)
-			b := s.group.value(x2, y)
-			c := s.group.value(x2, y2)
-			d := s.group.value(x, y2)
 
-			sq := Square{a, b, c, d}
-			lines := MarchSquare(sq, col, row, g)
-			for _, line := range lines {
-
-				bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
+			a, b, c, d := s.group.valueV2(x, x2, y, y2)
+			sq := Square{
+				a: a,
+				b: b,
+				c: c,
+				d: d,
 			}
+			// lines := sq.March(col, row, g)
+			// for _, line := range lines {
 
+			// 	bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
+			// }
+			// go sq.MarchV3(col, row, g)
+			sq.MarchV2(col, row, g, img, s.color)
 		}
 
 	}
+	// elapsed := time.Since(start)
+	// fmt.Println("draw time: ", elapsed)
+
 	return img
 }
+
