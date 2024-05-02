@@ -1,5 +1,9 @@
 .PHONY: run
 run:
+	@go run cmd/main.go
+
+.PHONY: buildrun
+buildrun:
 	@ $(MAKE) build && ./metaballs 
 
 .PHONY: build
