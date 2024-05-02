@@ -1,28 +1,31 @@
-// package internal
-
-// // import "github.com/pkg/profile"
-
-// func main() {
-// 	// defer profile.Start(profile.CPUProfile,profile.ProfilePath("./profile")).Stop()
-// 	// defer profile.Start(profile.TraceProfile, profile.ProfilePath("./profile"), profile.NoShutdownHook,).Stop()
-// 	NewMetaBallApp(
-// 		5,
-// 		SlowSpeedBall,
-// 		MediumSizeBall,
-// 		FPS(45),
-// 		ScreenSmall,
-// 		Resolution512).
-// 		Run()
-
-// }
-
 package main
 
-import "metaballs/app"
+import "metaballs/internal"
 
-func main(){
+// import "github.com/pkg/profile"
 
-    app.Run()
-
+func main() {
+	// defer profile.Start(profile.CPUProfile,profile.ProfilePath("./profile")).Stop()
+	// defer profile.Start(profile.TraceProfile, profile.ProfilePath("./profile"), profile.NoShutdownHook,).Stop()
+	internal.NewMetaBallApp(
+		6,
+		internal.SlowSpeedBall,
+		internal.LargeSizeBall,
+        internal.Pink,
+		internal.FPS(45),
+		internal.ScreenMedium,
+		internal.Resolution1024).
+		Run()
 
 }
+
+// package main
+
+// import "metaballs/app"
+
+// func main(){
+
+//     app.Run()
+
+
+// }

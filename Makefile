@@ -2,6 +2,10 @@
 run:
 	@go run cmd/main.go
 
+.PHONY: serve
+serve:
+	@go run html/server.go
+
 .PHONY: buildrun
 buildrun:
 	@ $(MAKE) build && ./metaballs 
@@ -32,6 +36,10 @@ build-linux-fyne:
 	@go install github.com/fyne-io/fyne-cross@latest
 	@fyne-cross linux -arch=amd64
 
+
+.PHONY: build-wasm
+build-wasm:
+	@GOOS=js GOARCH=wasm go build -o ./html/metaballs.wasm ./cmd
 .PHONY: pprof-cpu
 pprof-cpu:
 	@go tool pprof -http localhost:8080 profile/cpu.pprof
