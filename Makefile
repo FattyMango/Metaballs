@@ -15,6 +15,7 @@ build:
 build-win:
 #	@go install github.com/fyne-io/fyne-cross@latest
 #	@fyne-cross windows -arch=amd64,386
+	@sudo apt-get install gcc-mingw-w64
 	@GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -o ./metaballs.exe ./cmd
 
 
