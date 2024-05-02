@@ -27,6 +27,8 @@ func Run() {
 	fps := Map_FPS[METABALL_SELECTIONS["FPS"].GetSelected()]
 	
 	ballCount := Map_BallCount[METABALL_SELECTIONS["Ball Count"].GetSelected()]
-	metaBallApp := internal.NewMetaBallApp(ballCount, ballSpeed, ballSize, fps, screenSize, resolution)
+	ballColor := Map_BallColor[METABALL_SELECTIONS["Ball Color"].GetSelected()]
+
+	metaBallApp := internal.NewMetaBallApp(ballCount, ballSpeed, ballSize, ballColor, fps, screenSize, resolution)
 	metaBallApp.Run()
 }

@@ -127,14 +127,19 @@ func (sq *Square) MarchV2(col, row, g int, img *image.RGBA, color color.Color) {
 
 	// if the square is inside the contour line, fill the square with the color
 	case 15:
-
+		// fill the square with the color
 		bresenham.DrawLine(img, a1, a2, b1, b2, color)
 		bresenham.DrawLine(img, b1, b2, c1, c2, color)
 		bresenham.DrawLine(img, c1, c2, d1, d2, color)
 		bresenham.DrawLine(img, d1, d2, a1, a2, color)
+		
+		// draw the center
+		bresenham.DrawLine(img, (a1+b1+c1+d1)/4, (a2+b2+c2+d2)/4, (a1+b1+c1+d1)/4, (a2+b2+c2+d2)/4, color)
+
 
 	}
 
+	
 }
 
 // Apply the marching squares algorithm to the square

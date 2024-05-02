@@ -136,6 +136,12 @@ var (
 			Selection{Label: "20", Selected: false},
 		},
 
+		"Ball Color": &Selections{
+			Selection{Label: "Pink", Selected: true},
+			Selection{Label: "Cyan", Selected: false},
+			Selection{Label: "Gray", Selected: false},
+		},
+
 	}
 )
 
@@ -143,15 +149,6 @@ func initialModel() MetaballsViewModel {
 	return MetaballsViewModel{
 		// Our to-do list is a grocery list
 		Menu: []MenuItem{
-			MenuItem{
-				Label:      "Ball Size",
-				Selections: *METABALL_SELECTIONS["Ball Size"],
-			},
-			MenuItem{
-				Label:      "Ball Speed",
-				Selections: *METABALL_SELECTIONS["Ball Speed"],
-			},
-
 			MenuItem{
 				Label:      "Screen Size",
 				Selections: *METABALL_SELECTIONS["Screen Size"],
@@ -163,6 +160,19 @@ func initialModel() MetaballsViewModel {
 			MenuItem{
 				Label:      "FPS",
 				Selections: *METABALL_SELECTIONS["FPS"],
+			},
+			MenuItem{
+				Label:      "Ball Size",
+				Selections: *METABALL_SELECTIONS["Ball Size"],
+			},
+			MenuItem{
+				Label:      "Ball Speed",
+				Selections: *METABALL_SELECTIONS["Ball Speed"],
+			},
+
+			MenuItem{
+				Label:      "Ball Color",
+				Selections: *METABALL_SELECTIONS["Ball Color"],
 			},
 
 			MenuItem{

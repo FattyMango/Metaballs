@@ -25,15 +25,15 @@ type Screen struct {
 
 	painter chan *Line
 	img     *image.RGBA
-	color   color.RGBA
+	color   color.Color
 }
 
-func NewScreen(g *Group, r Resolution) *Screen {
+func NewScreen(g *Group, r Resolution,color BallColor) *Screen {
 	s := &Screen{
 		group:      g,
 		resolution: r,
 		painter:    make(chan *Line),
-		color:      color.RGBA{196, 77, 86, 1},
+		color:     color,
 	}
 	s.raster = canvas.NewRaster(s.draw)
 	// go s.StartPainter()

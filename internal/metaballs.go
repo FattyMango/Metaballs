@@ -67,7 +67,7 @@ type MetaBallApp struct {
 	ballCount uint8
 	ballSpeed BallSpeed
 	ballSize  BallSize
-
+	ballColor BallColor
 	fps FPS
 
 	screenSize ScreenSize
@@ -88,13 +88,13 @@ func NewDefaultMetaBallApp() *MetaBallApp {
 	}
 }
 
-func NewMetaBallApp(ballCount uint8, ballSpeed BallSpeed, ballSize BallSize, fps FPS, screenSize ScreenSize, resolution Resolution) *MetaBallApp {
+func NewMetaBallApp(ballCount uint8, ballSpeed BallSpeed, ballSize BallSize,ballColor BallColor, fps FPS, screenSize ScreenSize, resolution Resolution) *MetaBallApp {
 
 	return &MetaBallApp{
 		ballCount: ballCount,
-
 		ballSpeed: ballSpeed,
 		ballSize:  ballSize,
+		ballColor: ballColor,
 
 		fps: fps,
 
@@ -107,7 +107,7 @@ func NewMetaBallApp(ballCount uint8, ballSpeed BallSpeed, ballSize BallSize, fps
 func (m *MetaBallApp) Run() {
 	m.fyneApp = app.New()
 	g := newRandomGroup(int(m.ballCount), m.ballSpeed, m.ballSize)
-	m.screen = NewScreen(g, m.resolution)
+	m.screen = NewScreen(g, m.resolution,m.ballColor)
 
 	w := m.fyneApp.NewWindow("Metaballs")
 

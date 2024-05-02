@@ -39,4 +39,11 @@ var (
 		"8":  8,
 		"20": 20,
 	}
+
+	Map_BallColor = map[string]internal.BallColor{
+		"Pink":    internal.Pink,
+		"Cyan":  internal.Cyan,
+		"Gray":   internal.Gray,
+	}
+		
 )
