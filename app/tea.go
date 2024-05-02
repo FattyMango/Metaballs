@@ -36,10 +36,10 @@ func (s Selection) String() string {
 	return fmt.Sprintf("[%s] %s", x, s.Label)
 }
 
-type Selections []Selection
+type SelectionGroup []Selection
 
 // Select sets the selection at index i to "x" and all other selections to " ".
-func (s Selections) Select(i int) Selections {
+func (s SelectionGroup) Select(i int) SelectionGroup {
 	for j := range s {
 		s[j].Selected = false
 	}
@@ -47,7 +47,7 @@ func (s Selections) Select(i int) Selections {
 	return s
 }
 
-func (s Selections) Hover(i int) Selections {
+func (s SelectionGroup) Hover(i int) SelectionGroup {
 	for j := range s {
 		s[j].Hovered = false
 		if i == j {
@@ -60,7 +60,7 @@ func (s Selections) Hover(i int) Selections {
 	}
 	return s
 }
-func (s Selections) GetSelected() string {
+func (s SelectionGroup) GetSelected() string {
 	for _, selection := range s {
 		if selection.Selected {
 			return selection.Label
@@ -69,18 +69,19 @@ func (s Selections) GetSelected() string {
 	return ""
 }
 
-func (s Selections) String() string {
+func (s SelectionGroup) String() string {
 	str := ""
+	italic := color.New(color.FgHiWhite).Add(color.Italic)
 	for _, selection := range s {
 
 		// Render the row
-		str += fmt.Sprintf("%s\t", selection.String())
+		str += fmt.Sprintf("%s   \t", italic.Sprint(selection.String()))
 	}
 	return str
 }
 
 type MenuItem struct {
-	Selections Selections
+	Selections SelectionGroup
 	Label      string
 }
 
@@ -91,7 +92,8 @@ func (m *MenuItem) Unhover() {
 
 }
 func (m *MenuItem) String(cursor string) string {
-	return fmt.Sprintf("%s:\n %s\t%s",  m.Label,cursor,m.Selections.String())
+	label := color.New(color.FgMagenta).Add(color.Bold,color.Italic).Sprintf(m.Label)
+	return fmt.Sprintf("%s:\n\n %s\t%s", label ,cursor,m.Selections.String())
 }
 type MetaballsViewModel struct {
 	Menu       []MenuItem
@@ -102,41 +104,41 @@ type MetaballsViewModel struct {
 }
 
 var (
-	METABALL_SELECTIONS = map[string]*Selections{
-		"Ball Size": &Selections{
+	METABALL_SELECTIONS = map[string]*SelectionGroup{
+		"Ball Size": &SelectionGroup{
 			Selection{Label: "Small", Selected: true},
 			Selection{Label: "Medium", Selected: false},
 			Selection{Label: "Large", Selected: false},
 		},
-		"Ball Speed": &Selections{
+		"Ball Speed": &SelectionGroup{
 			Selection{Label: "Slow", Selected: true},
 			Selection{Label: "Medium", Selected: false},
 			Selection{Label: "Fast", Selected: false},
 		},
 
-		"Screen Size": &Selections{
+		"Screen Size": &SelectionGroup{
 			Selection{Label: "Small", Selected: true},
 			Selection{Label: "Medium", Selected: false},
 			Selection{Label: "Large", Selected: false},
 		},
-		"Resolution": &Selections{
+		"Resolution": &SelectionGroup{
 			Selection{Label: "Low", Selected: true},
 			Selection{Label: "Medium", Selected: false},
 			Selection{Label: "High", Selected: false},
 		},
-		"FPS": &Selections{
+		"FPS": &SelectionGroup{
 			Selection{Label: "30", Selected: false},
 			Selection{Label: "45", Selected: true},
 			Selection{Label: "60", Selected: false},
 		},
 
-		"Ball Count": &Selections{
+		"Ball Count": &SelectionGroup{
 			Selection{Label: "4", Selected: true},
 			Selection{Label: "8", Selected: false},
 			Selection{Label: "20", Selected: false},
 		},
 
-		"Ball Color": &Selections{
+		"Ball Color": &SelectionGroup{
 			Selection{Label: "Pink", Selected: true},
 			Selection{Label: "Cyan", Selected: false},
 			Selection{Label: "Gray", Selected: false},
@@ -252,7 +254,7 @@ func (m MetaballsViewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m MetaballsViewModel) View() string {
 	// The header
-	s := "Select your MetaBall settings\n\n"
+	s := "\nSelect your MetaBall settings\n\n"
 
 	// Iterate over our choices
 	for vi, item := range m.Menu {
