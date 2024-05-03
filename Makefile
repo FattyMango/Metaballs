@@ -2,10 +2,17 @@
 run:
 	@go run cmd/main.go
 
-.PHONY: serve
+.PHONY: serve-wasm
 serve:
-	@go run html/server.go
+	@./server
 
+./PHONY: build-server
+build-server:
+	@go build -o ./server  ./wasm/server.go
+
+./PHONY: build-server-win
+build-server-win:
+	@GOOS=windows GOARCH=amd64 go build -o ./server.exe  ./wasm/server.go
 .PHONY: buildrun
 buildrun:
 	@ $(MAKE) build && ./metaballs 
@@ -39,7 +46,8 @@ build-linux-fyne:
 
 .PHONY: build-wasm
 build-wasm:
-	@GOOS=js GOARCH=wasm go build -o ./html/metaballs.wasm ./cmd
+	@GOOS=js GOARCH=wasm go build -o ./wasm/metaballs.wasm ./cmd
+	
 .PHONY: pprof-cpu
 pprof-cpu:
 	@go tool pprof -http localhost:8080 profile/cpu.pprof

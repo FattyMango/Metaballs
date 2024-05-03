@@ -18,6 +18,26 @@ After setting your preferences, press `q` to confirm and start the animation.
 
 ![Animation](docs/img/metaball.gif)
 
+
+## WASM
+to run the metaballs in the browser, you first need to run a server to serve the wasm file(cant fetch directly since javascript requires CORS headers)
+
+### Linux
+```bash
+make serve
+```
+or 
+```bash
+./server
+```
+
+### Windows
+run the `server.exe` file
+
+
+
+after running the server open the `wasm/index.html` file in your browser click the `run` button to start the animation
+
 ## References
 
 * [Metaballs and Marching Squares](https://jamie-wong.com/2014/08/19/metaballs-and-marching-squares/), by Jamie Wong
