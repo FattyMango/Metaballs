@@ -20,5 +20,5 @@ var Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/wasm")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	http.ServeFile(w, r, "./metaballs.wasm")
+	http.ServeFile(w, r, "./html/metaballs.wasm")
 })

@@ -28,12 +28,12 @@ type Screen struct {
 	color   color.Color
 }
 
-func NewScreen(g *Group, r Resolution,color BallColor) *Screen {
+func NewScreen(g *Group, r Resolution, color BallColor) *Screen {
 	s := &Screen{
 		group:      g,
 		resolution: r,
 		painter:    make(chan *Line),
-		color:     color,
+		color:      color,
 	}
 	s.raster = canvas.NewRaster(s.draw)
 	// go s.StartPainter()
@@ -57,42 +57,65 @@ func (s *Screen) StartPainter() {
 // Called when s.Refresh() is called
 // Re-render the screen
 func (s *Screen) draw(w, h int) image.Image {
-	// start := time.Now()
-	// fgcolor := theme.WarningColor()
 	img := image.NewRGBA(image.Rect(0, 0, int(s.Size().Height), int(s.Size().Width)))
 
 	size := float32(max(w, h))
 	g := int(math.Ceil(float64(size) / float64(s.resolution)))
+	
+		for row := 0; row < h; row += g {
+			y := float32(row) / size
+			y2 := float32(row+g) / size
 
-	for row := 0; row < h; row += g {
-		y := float32(row) / size
-		y2 := float32(row+g) / size
+			go func() {
 
-		for col := 0; col < w; col += g {
+				for col := 0; col < w/2; col += g {
 
-			x := float32(col) / size
-			x2 := float32(col+g) / size
+					x := float32(col) / size
+					x2 := float32(col+g) / size
 
-			a, b, c, d := s.group.valueV2(x, x2, y, y2)
-			sq := Square{
-				a: a,
-				b: b,
-				c: c,
-				d: d,
-			}
-			// lines := sq.March(col, row, g)
-			// for _, line := range lines {
+					a, b, c, d := s.group.valueV2(x, x2, y, y2)
+					sq := Square{
+						a: a,
+						b: b,
+						c: c,
+						d: d,
+					}
+					// lines := sq.March(col, row, g)
+					// for _, line := range lines {
 
-			// 	bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
-			// }
-			// go sq.MarchV3(col, row, g)
-			sq.MarchV2(col, row, g, img, s.color)
+					// 	bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
+					// }
+					// go sq.MarchV3(col, row, g)
+					sq.MarchV2(col, row, g, img, s.color)
+				}
+			}()
+
+			go func() {
+
+				for col := w/2; col < w; col += g {
+
+					x := float32(col) / size
+					x2 := float32(col+g) / size
+
+					a, b, c, d := s.group.valueV2(x, x2, y, y2)
+					sq := Square{
+						a: a,
+						b: b,
+						c: c,
+						d: d,
+					}
+					// lines := sq.March(col, row, g)
+					// for _, line := range lines {
+
+					// 	bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
+					// }
+					// go sq.MarchV3(col, row, g)
+					sq.MarchV2(col, row, g, img, s.color)
+				}
+			}()
 		}
 
-	}
-
-	// elapsed := time.Since(start)
-	// fmt.Println("draw time: ", elapsed)
+	
 
 	return img
 }
