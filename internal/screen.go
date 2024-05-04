@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"sync"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -61,39 +62,42 @@ func (s *Screen) draw(w, h int) image.Image {
 
 	size := float32(max(w, h))
 	g := int(math.Ceil(float64(size) / float64(s.resolution)))
-	
-		for row := 0; row < h; row += g {
-			y := float32(row) / size
-			y2 := float32(row+g) / size
+	wait := sync.WaitGroup{}
+	for row := 0; row < h; row += g {
+		y := float32(row) / size
+		y2 := float32(row+g) / size
+		wait.Add(1)
+		go func(row int) {
+			defer wait.Done()
 
-			
+			for col := 0; col < w; col += g {
 
-				for col := 0; col < w; col += g {
+				x := float32(col) / size
+				x2 := float32(col+g) / size
 
-					x := float32(col) / size
-					x2 := float32(col+g) / size
-
-					a, b, c, d := s.group.valueV2(x, x2, y, y2)
-					sq := Square{
-						a: a,
-						b: b,
-						c: c,
-						d: d,
-					}
-					// lines := sq.March(col, row, g)
-					// for _, line := range lines {
-
-					// 	bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
-					// }
-					// go sq.MarchV3(col, row, g)
-					sq.MarchV2(col, row, g, img, s.color)
+				a, b, c, d := s.group.valueV2(x, x2, y, y2)
+				sq := Square{
+					a: a,
+					b: b,
+					c: c,
+					d: d,
 				}
-			
+				sq.MarchV2(col, row, g, img, s.color)
 
-		
-		}
+				// Too much time wasted on copying and looping through the lines
+				// lines := sq.March(col, row, g)
+				// for _, line := range lines {
 
-	
+				// 	bresenham.DrawLine(img, line.x1, line.y1, line.x2, line.y2, color)
+				// }
 
+				// Too much time wasted on managing the goroutines
+				// go sq.MarchV3(col, row, g)
+
+			}
+		}(row)
+
+	}
+	wait.Wait()
 	return img
 }

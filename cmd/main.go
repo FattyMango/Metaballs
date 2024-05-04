@@ -11,11 +11,11 @@ func main() {
 	// defer profile.Start(profile.TraceProfile, profile.ProfilePath("./profile"), profile.NoShutdownHook,).Stop()
 	internal.NewMetaBallApp(
 		7,
-		internal.NormalSpeedBall,
+		internal.SlowSpeedBall,
 		internal.LargeSizeBall,
         internal.Pink,
-		internal.FPS(45),
-		internal.ScreenMedium,
+		internal.FPS(60),
+		internal.ScreenSmall,
 		internal.Resolution1024).
 		Run()
 
